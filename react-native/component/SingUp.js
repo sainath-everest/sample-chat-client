@@ -14,9 +14,7 @@ export default class SignuUp extends Component {
                 LastName: '',
                 Password: '',
                 ConfirmPassword: ''
-
-            }
-            
+            }  
         }
     }
     componentWillMount() {
@@ -60,9 +58,9 @@ export default class SignuUp extends Component {
     }
  
     handleSubmit = async () => {
-        console.log("before form submit user "+this.state.user)
+        console.log("before user registration "+this.state.user)
         const res = await UserService.registration(this.state.user)
-        console.log("form submitted "+res)
+        console.log("after user registration "+res)
     }
     render() {
         const { user } = this.state;
