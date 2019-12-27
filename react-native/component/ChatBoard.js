@@ -1,30 +1,60 @@
-
 import React, { Component } from 'react'
-import { AppRegistry, Text, View } from 'react-native'
+import { AppRegistry, Text, View, ScrollView, StyleSheet } from 'react-native'
 import WS from 'react-native-websocket'
+import * as UserService from '../service/user-service'
+import SocketIOClient from 'socket.io-client/dist/socket.io.js'
+import io from 'socket.io-client';
+import PersonalChatScreen from './PersonalChatScreen'
+import SocketConnection from './SocketConnection'
 export default class ChatBoard extends Component {
-    constructor(props){
-        super(props);
-    }
-    render () {
-      return (
-        <View style={{flex: 1}}>
-          <WS
-            ref={ref => {this.ws = ref}}
-            url="ws://192.168.0.111:8000/ws?id=sai"
-            onOpen={() => {
-              console.log('Open!')
-              const msg = {ID:"suresh",Data:"msg from sai"}
-              this.ws.send(JSON.stringify(msg))
-              console.log('msg was sent')
-            }}
-            onMessage={(e) => {console.log("recieved ",e.data)}}
-            onError={console.log}
-            onClose={console.log}
-            reconnect // Will try to reconnect onClose
-          />
-        </View>
-        
-      )
+  constructor(props) {
+    super(props);
+    this.state = {
+      loggedInUser: "sai",
+      friendList: ["suresh", "srikanth", "santhosh"],
+      targetUser: "",
+      isConnectedToServer: false,
+      socket: null
     }
   }
+  onTextPress = (event, data) => {
+    console.log(data);
+    this.setState({ targetUser: data })
+  }
+  
+  setSocketConnection = (socketConn) => {
+    if(this.state.socket) {
+      return;
+    }
+    this.setState({ socket: socketConn });
+  
+  }
+
+  resetTargetUser = () => {
+    this.setState({
+      targetUser: ""
+    })
+  }
+
+  render() {
+    return (
+
+      <View>
+        {
+          this.state.socket ?
+            this.state.targetUser != "" ? <PersonalChatScreen  resetTargetUser={this.resetTargetUser} socket={this.state.socket} /> :
+
+              this.state.friendList.map((item, key) => (
+                <Text onPress={(e) => this.onTextPress(e, item)}> {item}  </Text>
+              ))
+              : <View />
+        }
+            <SocketConnection
+              setSocketConnection={this.setSocketConnection}
+            />
+      </View>
+
+
+    );
+  }
+}

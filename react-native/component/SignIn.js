@@ -1,5 +1,7 @@
 import { Form, TextValidator } from 'react-native-validator-form';
 import React, { Component } from 'react';
+import { Button } from 'react-native';
+import * as UserService from '../service/user-service'
 export default class SignIn extends Component {
     constructor(props) {
         super(props);
@@ -11,12 +13,23 @@ export default class SignIn extends Component {
             }
         }
     }
+    handleUserId = (event) => {
+        const { user } = this.state;
+        user.UserID = event.nativeEvent.text;
+        this.setState({ user });
+    }
+    handlePassword = (event) => {
+        const { user } = this.state;
+        user.Password = event.nativeEvent.text;
+        this.setState({ user });
+    }
     handleSubmit = async () => {
         console.log("before user login "+this.state.user)
-        const res = await UserService.registration(this.state.user)
-        console.log("after user login "+res)
+        const res = await UserService.signin(this.state.user)
+        console.log("after user login "+res.headers)
     }
     render() {
+        const { user } = this.state;
         return (
             <Form
                 ref="form"
