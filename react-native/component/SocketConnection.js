@@ -13,10 +13,7 @@ export default class SocketConnection extends Component {
         this.props.setSocketConnection(socket)
 
     }
-    onMessageReceived(message) {
-        this.props.setSocketConnection(socket)
 
-    }
     render() {
         const wesocketUrl = "ws://192.168.0.111:8000/ws?id=" + this.state.loggedInUser
         return (
@@ -36,6 +33,8 @@ export default class SocketConnection extends Component {
                     }}
                     onMessage={(e) => {
                         console.log("recieved ", e.data)
+                        //this.props.onMessageReceived(e.data)
+                        //MessageReducer
                     }
                     }
                     onError={console.log}

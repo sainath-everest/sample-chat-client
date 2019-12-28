@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { View, Text, TextInput, Button, ScrollView } from 'react-native'
 import WS from 'react-native-websocket'
+import * as UserService from '../service/user-service'
+import * as MessageService from '../service/user-service'
 
 export default class PersonalChatScreen extends Component {
 
@@ -8,40 +10,50 @@ export default class PersonalChatScreen extends Component {
         super(props);
         this.state = {
             loggedInUser: "sai",
-            incomingMessages: [],
-            outgoingMessages: [],
-            messages: ["a" ,"b"],
+            messages: ["a", "b"],
             currentMessage: "",
-            needToSendMessage: false
+            socket: null
 
         }
     }
+    async componentDidMount() {
+        if (this.state.socket == null) {
+            const connection = await UserService.geScocketConnection()
+            this.state.socket = connection
 
-    componentDidMount() {
-        // this.props.socket.onMessage = (e) => {
-        //     console.log("recieved ", e.data)
-        // }
+        }
+
+        this.state.socket.onopen = () => {
+            this.state.socket.onmessage = (event) => {
+                this.state.messages.push(event.data)
+                this.setState({})
+
+            }
+        }
+
+
     }
 
     onChangeText(text) {
-        this.state.messages.push(text)
         this.state.currentMessage = text;
     }
+
     onMessageSubmit(event) {
-        console.log("before message submit ",this.props.socket)
         const msg = { ID: "suresh", Data: this.state.currentMessage }
-        this.props.socket.send(JSON.stringify(msg))
+        this.state.socket.send(JSON.stringify(msg))
+        this.state.messages.push(this.state.currentMessage)
+        this.setState({})
+
     }
-    onMessageReceived(recievedMessage) {
-        this.state.messages.push(recievedMessage)
-    }
-    
+
+
     render() {
+
         return (
             <View>
-                    {this.state.messages.map((item, key) => (
-                        <Text >{item}</Text>
-                    ))}
+                {this.state.messages.map((item, key) => (
+                    <Text >{item}</Text>
+                ))}
                 <TextInput
                     multiline={true}
                     placeholder="type your message here ..."
@@ -52,13 +64,11 @@ export default class PersonalChatScreen extends Component {
                     onPress={(e) => this.onMessageSubmit(e)}
                 />
 
-                <Button
-                    title="Reset"
-                    onPress={(e) => this.props.resetTargetUser()}
-                />
+
             </View>
 
         )
 
     }
 }
+

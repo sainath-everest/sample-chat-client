@@ -13,7 +13,6 @@ export default class ChatBoard extends Component {
       loggedInUser: "sai",
       friendList: ["suresh", "srikanth", "santhosh"],
       targetUser: "",
-      isConnectedToServer: false,
       socket: null
     }
   }
@@ -21,37 +20,37 @@ export default class ChatBoard extends Component {
     console.log(data);
     this.setState({ targetUser: data })
   }
-  
+
   setSocketConnection = (socketConn) => {
-    if(this.state.socket) {
+    if (this.state.socket) {
       return;
     }
     this.setState({ socket: socketConn });
-  
+
   }
 
-  resetTargetUser = () => {
-    this.setState({
-      targetUser: ""
-    })
-  }
 
   render() {
     return (
 
       <View>
         {
-          this.state.socket ?
-            this.state.targetUser != "" ? <PersonalChatScreen  resetTargetUser={this.resetTargetUser} socket={this.state.socket} /> :
+            this.state.targetUser != "" ? <PersonalChatScreen
+            /> :
 
               this.state.friendList.map((item, key) => (
                 <Text onPress={(e) => this.onTextPress(e, item)}> {item}  </Text>
               ))
-              : <View />
-        }
-            <SocketConnection
-              setSocketConnection={this.setSocketConnection}
-            />
+            // :<View/>
+            //   }
+
+            // {/* <SocketConnection
+            //   onMessageReceived={this.onMessageReceived}
+            //   setSocketConnection={this.setSocketConnection}
+            // /> */}
+          }
+        
+
       </View>
 
 
