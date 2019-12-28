@@ -1,7 +1,8 @@
 import { Form, TextValidator } from 'react-native-validator-form';
 import React, { Component } from 'react';
-import { Button } from 'react-native';
+import { Button ,View} from 'react-native';
 import * as UserService from '../service/user-service'
+import ChatBoard from './ChatBoard'
 export default class SignIn extends Component {
     constructor(props) {
         super(props);
@@ -10,7 +11,9 @@ export default class SignIn extends Component {
                 UserID: '',
                 Password: '',
 
-            }
+            },
+            isUserLoginSuccess : false,
+            socket: null
         }
     }
     handleUserId = (event) => {
@@ -25,12 +28,22 @@ export default class SignIn extends Component {
     }
     handleSubmit = async () => {
         console.log("before user login "+this.state.user)
-        const res = await UserService.signin(this.state.user)
-        console.log("after user login "+res.headers)
+       // const res = await UserService.signin(this.state.user)
+        this.state.isUserLoginSuccess = true;
+        this.intiateWebsocketConnection()
+    }
+    intiateWebsocketConnection = async () => {
+        if (this.state.socket == null) {
+            const connection = await UserService.geScocketConnection()
+            this.setState({socket:connection} , () => {console.log(this.state)})
+        }
+
     }
     render() {
         const { user } = this.state;
+   
         return (
+            this.state.isUserLoginSuccess ? <ChatBoard  socket = {this.state.socket}/>:
             <Form
                 ref="form"
                 onSubmit={this.handleSubmit}
@@ -61,6 +74,7 @@ export default class SignIn extends Component {
                 onPress={this.handleSubmit}
             />
             </Form>
+            
         )
 
     }

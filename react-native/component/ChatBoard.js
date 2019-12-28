@@ -21,35 +21,19 @@ export default class ChatBoard extends Component {
     this.setState({ targetUser: data })
   }
 
-  setSocketConnection = (socketConn) => {
-    if (this.state.socket) {
-      return;
-    }
-    this.setState({ socket: socketConn });
-
-  }
-
-
   render() {
     return (
 
-      <View>
+      <View >
         {
-            this.state.targetUser != "" ? <PersonalChatScreen
-            /> :
+          this.state.targetUser != "" ? <PersonalChatScreen
+            targetUser={this.state.targetUser}
+            socket={this.props.socket} /> :
 
-              this.state.friendList.map((item, key) => (
-                <Text onPress={(e) => this.onTextPress(e, item)}> {item}  </Text>
-              ))
-            // :<View/>
-            //   }
-
-            // {/* <SocketConnection
-            //   onMessageReceived={this.onMessageReceived}
-            //   setSocketConnection={this.setSocketConnection}
-            // /> */}
-          }
-        
+            this.state.friendList.map((item, key) => (
+              <Text onPress={(e) => this.onTextPress(e, item)}> {item}  </Text>
+            ))
+        }
 
       </View>
 
