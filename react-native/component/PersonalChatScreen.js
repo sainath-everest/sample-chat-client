@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, TextInput, Button, FlatList, StyleSheet } from 'react-native'
+import { View, Text, TextInput, Button, FlatList, StyleSheet, KeyboardAvoidingView } from 'react-native'
 import WS from 'react-native-websocket'
 import * as UserService from '../service/user-service'
 import * as MessageService from '../service/message-service'
@@ -50,6 +50,7 @@ export default class PersonalChatScreen extends Component {
         this.props.socket.send(JSON.stringify(msg))
         this.state.messages.push(msg)
         MessageService.addMessagetoStore(msg)
+        this.messageInput.clear()
         this.setState({})
 
     }
@@ -57,23 +58,28 @@ export default class PersonalChatScreen extends Component {
 
     render() {
         return (
-            <View>
-                <FlatList
+            <KeyboardAvoidingView enabled>
+                <View>
+                    <FlatList
+                        style={styles.container}
                         data={this.state.messages}
-                        renderItem={({ item }) => <Text style={styles.item}>{item.data}</Text>}
-                        keyExtractor={(item, index) => item.data}
+                        renderItem={({ item, index }) => <Text style={styles.item}>{item.data}</Text>}
+                         keyExtractor={(item, index) => item.data}
                     />
-               
-                <TextInput
-                    multiline={true}
-                    placeholder="type your message here ..."
-                    onChangeText={text => this.onChangeText(text)}
-                />
-                <Button
-                    title="Send"
-                    onPress={(e) => this.onMessageSubmit(e)}
-                />
-            </View>
+                </View>
+                <View style={{ height: "20%" }}>
+                    <TextInput
+                        ref={input => { this.messageInput = input }} 
+                        multiline={true}
+                        placeholder="type your message here ..."
+                        onChangeText={text => this.onChangeText(text)}
+                    />
+                    <Button
+                        title="Send"
+                        onPress={(e) => this.onMessageSubmit(e)}
+                    />
+                </View>
+            </KeyboardAvoidingView>
 
         )
 
@@ -81,8 +87,7 @@ export default class PersonalChatScreen extends Component {
 }
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        paddingTop: 22
+        height: "80%"
     },
     item: {
         padding: 10,
