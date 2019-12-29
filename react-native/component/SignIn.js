@@ -28,9 +28,14 @@ export default class SignIn extends Component {
     }
     handleSubmit = async () => {
         console.log("before user login "+this.state.user)
-       // const res = await UserService.signin(this.state.user)
-        this.state.isUserLoginSuccess = true;
-        this.intiateWebsocketConnection()
+        const res = await UserService.signin(this.state.user)
+        let status = res.data === 'success' ? true : false
+        this.state.isUserLoginSuccess = status;
+        if(this.state.isUserLoginSuccess){
+            this.intiateWebsocketConnection()
+        }
+        this.setState({})
+       
     }
     intiateWebsocketConnection = async () => {
         if (this.state.socket == null) {

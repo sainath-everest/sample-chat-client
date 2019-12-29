@@ -3,29 +3,25 @@ import React, { Component } from 'react';
 import SignuUp from './SingUp'
 import ChatBoard from './ChatBoard'
 import SignIn from './SignIn'
-import  SocketConnection from './SocketConnection'  
+import SocketConnection from './SocketConnection'
 import { View } from 'react-native'
 import PersonalChatScreen from './PersonalChatScreen'
 import Test from './Test';
+import DashBoard from './DashBoard'
+import { createAppContainer } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation-stack';
 
 
+const MainNavigator = createStackNavigator({
+  DashBoard: { screen: DashBoard },
+  SignIn: { screen: SignIn },
+  SignuUp : { screen : SignuUp }
+});
 
-export default class App extends Component {
+const App = createAppContainer(MainNavigator);
 
-  render() {
-    return (
-      <View>
-        {/* {/* <SocketConnection  />
-        <SignuUp />
-        <SignIn /> 
-        <PersonalChatScreen 
-           <Test/>
-       <ChatBoard /> */}
-       <SignIn /> 
-   
-    </View>
-    );
-  }
-};
+export default App;
+
+
 
 

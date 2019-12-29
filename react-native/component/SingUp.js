@@ -1,20 +1,23 @@
 import React, { Component } from 'react';
-import { Button } from 'react-native';
+import { Button , View,  Text } from 'react-native';
 import { Form, TextValidator } from 'react-native-validator-form';
 import axios from 'axios';
 import * as UserService from '../service/user-service'
+import SignIn from './SignIn';
 export default class SignuUp extends Component {
 
-    constructor(props){
+    constructor(props) {
         super(props);
-        this.state={
-            user : {
-                UserID:'',
+        this.state = {
+            user: {
+                UserID: '',
                 FirstName: '',
                 LastName: '',
                 Password: '',
                 ConfirmPassword: ''
-            }  
+            },
+            isRegistrationSuccess: false,
+            isFormSubmitted : false
         }
     }
     componentWillMount() {
@@ -25,7 +28,7 @@ export default class SignuUp extends Component {
             return true;
         });
     }
- 
+
     componentWillUnmount() {
         Form.removeValidationRule('isPasswordMatch');
     }
@@ -50,56 +53,62 @@ export default class SignuUp extends Component {
         user.Password = event.nativeEvent.text;
         this.setState({ user });
     }
- 
+
     handleRepeatPassword = (event) => {
         const { user } = this.state;
         user.ConfirmPassword = event.nativeEvent.text;
         this.setState({ user });
     }
- 
+
     handleSubmit = async () => {
-        console.log("before user registration "+this.state.user)
+        console.log("before user registration " + this.state.user)
         const res = await UserService.registration(this.state.user)
-        console.log("after user registration "+res)
+        console.log("after user registration " + res.data)
+        let status  = res.data === 'success' ? true : false
+        this.setState({ isRegistrationSuccess: status ,isFormSubmitted:true})
     }
     render() {
         const { user } = this.state;
-        return(
+        return (
+            <View>
+           {this.state.isFormSubmitted && this.state.isRegistrationSuccess   ? <SignIn /> :
+           
+            this.state.isFormSubmitted ? <Text>hai</Text> :
             <Form
-            ref="form"
-            onSubmit={this.handleSubmit}
-        >
-            <TextValidator
-                name="UserID"
-                label="UserID"
-                validators={['required']}
-                errorMessages={['This field is required']}
-                placeholder="Your UserID"
-                type="text"
-                value={user.UserID}
-                onChange={this.handleUserId}
-            />
-             <TextValidator
-                name="FirstName"
-                label="FirstName"
-                validators={['required']}
-                errorMessages={['This field is required']}
-                placeholder="First Name"
-                type="text"
-                value={user.FirstName}
-                onChange={this.handleFirstName}
-            />
-            <TextValidator
-                name="LastName"
-                label="LastName"
-                validators={['required']}
-                errorMessages={['This field is required']}
-                placeholder="Last Name"
-                type="text"
-                value={user.LastName}
-                onChange={this.handleLastName}
-            />
-             <TextValidator
+                ref="form"
+                onSubmit={this.handleSubmit}
+            >
+                <TextValidator
+                    name="UserID"
+                    label="UserID"
+                    validators={['required']}
+                    errorMessages={['This field is required']}
+                    placeholder="Your UserID"
+                    type="text"
+                    value={user.UserID}
+                    onChange={this.handleUserId}
+                />
+                <TextValidator
+                    name="FirstName"
+                    label="FirstName"
+                    validators={['required']}
+                    errorMessages={['This field is required']}
+                    placeholder="First Name"
+                    type="text"
+                    value={user.FirstName}
+                    onChange={this.handleFirstName}
+                />
+                <TextValidator
+                    name="LastName"
+                    label="LastName"
+                    validators={['required']}
+                    errorMessages={['This field is required']}
+                    placeholder="Last Name"
+                    type="text"
+                    value={user.LastName}
+                    onChange={this.handleLastName}
+                />
+                <TextValidator
                     name="password"
                     label="text"
                     secureTextEntry
@@ -114,19 +123,23 @@ export default class SignuUp extends Component {
                     name="repeatPassword"
                     label="text"
                     secureTextEntry
-                    validators={['isPasswordMatch','required']}
-                    errorMessages={['Password mismatch','This field is required']}
+                    validators={['isPasswordMatch', 'required']}
+                    errorMessages={['Password mismatch', 'This field is required']}
                     placeholder="Confirm Password"
                     type="text"
                     value={user.ConfirmPassword}
                     onChange={this.handleRepeatPassword}
                 />
-             <Button
-                title="Submit"
-                onPress={this.handleSubmit}
-            />
-        </Form>
-            
+                <Button
+                    title="Submit"
+                    onPress={this.handleSubmit}
+                />
+            </Form>
+          
+    }
+           
+            </View>
+    
         )
     }
 }

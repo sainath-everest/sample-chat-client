@@ -13,8 +13,11 @@
     "axios": "^0.19.0",
     "react": "16.9.0",
     "react-native": "0.61.5",
+    "react-native-gesture-handler": "^1.5.2",
     "react-native-validator-form": "^1.0.0",
     "react-native-websocket": "^1.0.2",
+    "react-navigation": "^4.0.10",
+    "react-navigation-stack": "^1.10.3",
     "socket.io-client": "^2.3.0"
   },
   "devDependencies": {
