@@ -52,7 +52,7 @@ export default class SignIn extends Component {
         return (
             <View>
                 {this.state.isUserLoginSuccess && this.state.isFormSubmitted ? 
-                    <ChatBoard socket={this.state.socket} />
+                    <ChatBoard socket={this.state.socket} loggedInUser = {this.state.user.UserID}/>
                  : 
                 <View>
                     {this.state.isFormSubmitted ? <Text style={styles.text}>The signin failed,Please try agian</Text> : <Text></Text>}

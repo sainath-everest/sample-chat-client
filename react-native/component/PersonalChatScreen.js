@@ -7,7 +7,6 @@ export default class PersonalChatScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            loggedInUser: "sai",
             messages: [],
             currentMessage: "",
             socket: null
@@ -37,7 +36,7 @@ export default class PersonalChatScreen extends Component {
     }
 
     onMessageSubmit(event) {
-        const msg = { senderId: "sai", receiverId: "suresh", data: this.state.currentMessage ,date : new Date() }
+        const msg = { senderId: this.props.loggedInUser, receiverId: this.props.targetUser, data: this.state.currentMessage ,date : new Date() }
         this.props.socket.send(JSON.stringify(msg))
         this.state.messages.push(msg)
         MessageService.addMessagetoStore(msg)

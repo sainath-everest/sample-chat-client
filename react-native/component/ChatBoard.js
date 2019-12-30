@@ -5,7 +5,7 @@ export default class ChatBoard extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      loggedInUser: "sai",
+
       friendList: ["suresh", "srikanth", "santhosh"],
       targetUser: "",
       socket: null
@@ -21,6 +21,7 @@ export default class ChatBoard extends Component {
       <View >
         {this.state.targetUser != "" ? <PersonalChatScreen
           targetUser={this.state.targetUser}
+          loggedInUser = {this.props.loggedInUser}
           socket={this.props.socket} /> :
 
           <FlatList
