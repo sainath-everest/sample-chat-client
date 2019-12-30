@@ -50,6 +50,9 @@ export default class PersonalChatScreen extends Component {
             <KeyboardAvoidingView enabled>
                 <View>
                     <FlatList
+                         ref={ref => this.flatList = ref}
+                         onContentSizeChange={() => this.flatList.scrollToEnd({animated: true})}
+                         onLayout={() => this.flatList.scrollToEnd({animated: true})}
                         style={styles.container}
                         data={this.state.messages}
                         renderItem={({ item, index }) => <Text style={styles.item}>{item.data +"        "+item.date}</Text>}
