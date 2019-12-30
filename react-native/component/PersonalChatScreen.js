@@ -17,13 +17,7 @@ export default class PersonalChatScreen extends Component {
         }
     }
     componentDidMount() {
-        // if (this.state.socket == null) {
-        //     const connection = await UserService.geScocketConnection()
-        //     this.state.socket = connection
-
-        // }
         console.log(this.props.socket)
-        // this.props.socket.onopen = () => {
         this.props.socket.onmessage = (event) => {
             const data = JSON.parse(event.data)
             console.log("message from server ", data)
@@ -33,7 +27,6 @@ export default class PersonalChatScreen extends Component {
             this.setState({ messages: msgs }, () => { console.log(this.state.messages) })
 
         }
-        // }
         if (this.state.messages.length == 0) {
             this.state.messages = MessageService.getUserMessagesById(this.props.targetUser)
             this.setState({})
@@ -46,7 +39,7 @@ export default class PersonalChatScreen extends Component {
     }
 
     onMessageSubmit(event) {
-        const msg = { senderId: "sai", receiverId: "suresh", data: this.state.currentMessage }
+        const msg = { senderId: "sai", receiverId: "suresh", data: this.state.currentMessage ,date : new Date() }
         this.props.socket.send(JSON.stringify(msg))
         this.state.messages.push(msg)
         MessageService.addMessagetoStore(msg)
@@ -55,7 +48,6 @@ export default class PersonalChatScreen extends Component {
 
     }
 
-
     render() {
         return (
             <KeyboardAvoidingView enabled>
@@ -63,7 +55,7 @@ export default class PersonalChatScreen extends Component {
                     <FlatList
                         style={styles.container}
                         data={this.state.messages}
-                        renderItem={({ item, index }) => <Text style={styles.item}>{item.data}</Text>}
+                        renderItem={({ item, index }) => <Text style={styles.item}>{item.data +"        "+item.date}</Text>}
                          keyExtractor={(item, index) => item.data}
                     />
                 </View>
