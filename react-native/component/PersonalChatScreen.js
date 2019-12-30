@@ -36,7 +36,14 @@ export default class PersonalChatScreen extends Component {
     }
 
     onMessageSubmit(event) {
-        const msg = { senderId: this.props.loggedInUser, receiverId: this.props.targetUser, data: this.state.currentMessage ,date : new Date() }
+        const msg = {
+            senderId: this.props.loggedInUser,
+            receiverId: this.props.targetUser,
+            data: this.state.currentMessage,
+            date: new Date(),
+            messageType: "outgoing"
+        }
+
         this.props.socket.send(JSON.stringify(msg))
         this.state.messages.push(msg)
         MessageService.addMessagetoStore(msg)
@@ -50,18 +57,22 @@ export default class PersonalChatScreen extends Component {
             <KeyboardAvoidingView enabled>
                 <View>
                     <FlatList
-                         ref={ref => this.flatList = ref}
-                         onContentSizeChange={() => this.flatList.scrollToEnd({animated: true})}
-                         onLayout={() => this.flatList.scrollToEnd({animated: true})}
+                        ref={ref => this.flatList = ref}
+                        onContentSizeChange={() => this.flatList.scrollToEnd({ animated: true })}
+                        onLayout={() => this.flatList.scrollToEnd({ animated: true })}
                         style={styles.container}
                         data={this.state.messages}
-                        renderItem={({ item, index }) => <Text style={styles.item}>{item.data +"        "+item.date}</Text>}
-                         keyExtractor={(item, index) => item.data}
+                        renderItem={({ item, index }) =>
+                        <Text style={[styles.item, item.messageType === 'incoming' ? styles.incoming : styles.outgoing]}>
+                            <Text style = {styles.message}>{item.data+"    "}</Text>
+                            <Text style = {styles.date}>{item.date}</Text>
+                        </Text>}
+                        keyExtractor={(item, index) => item.data}
                     />
                 </View>
                 <View style={{ height: "20%" }}>
                     <TextInput
-                        ref={input => { this.messageInput = input }} 
+                        ref={input => { this.messageInput = input }}
                         multiline={true}
                         placeholder="type your message here ..."
                         onChangeText={text => this.onChangeText(text)}
@@ -79,14 +90,30 @@ export default class PersonalChatScreen extends Component {
 }
 const styles = StyleSheet.create({
     container: {
-        height: "80%"
+        height: "80%",
     },
     item: {
-        padding: 10,
-        fontSize: 18,
         margin: 10,
-        height: 44,
-        backgroundColor: '#A2D9CE'
+        padding: 10,
+        maxWidth: "90%"
+    },
+    message : {
+        fontSize: 18,
+    },
+    date : {
+        fontSize: 12, 
+
+    },
+    outgoing: {
+        backgroundColor: '#FFC0CB',
+        alignSelf: 'flex-start'
+       
+    },
+    incoming: {
+        backgroundColor: '#A2D9CE',
+        alignSelf: 'flex-end'
+       
+       
     },
 })
 
