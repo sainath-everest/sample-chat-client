@@ -1,11 +1,6 @@
 import React, { Component } from 'react'
-import { AppRegistry, Text, View, ScrollView, StyleSheet, FlatList } from 'react-native'
-import WS from 'react-native-websocket'
-import * as UserService from '../service/user-service'
-import SocketIOClient from 'socket.io-client/dist/socket.io.js'
-import io from 'socket.io-client';
+import {Text, View , StyleSheet, FlatList } from 'react-native'
 import PersonalChatScreen from './PersonalChatScreen'
-import SocketConnection from './SocketConnection'
 export default class ChatBoard extends Component {
   constructor(props) {
     super(props);

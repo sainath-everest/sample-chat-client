@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Button, View, Text, StyleSheet } from 'react-native';
 import { Form, TextValidator } from 'react-native-validator-form';
-import axios from 'axios';
 import * as UserService from '../service/user-service'
 import SignIn from './SignIn';
 export default class SignuUp extends Component {

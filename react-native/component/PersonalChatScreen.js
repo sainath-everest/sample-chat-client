@@ -1,7 +1,5 @@
 import React, { Component } from 'react'
 import { View, Text, TextInput, Button, FlatList, StyleSheet, KeyboardAvoidingView } from 'react-native'
-import WS from 'react-native-websocket'
-import * as UserService from '../service/user-service'
 import * as MessageService from '../service/message-service'
 
 export default class PersonalChatScreen extends Component {
