@@ -48,6 +48,7 @@ export default class SignIn extends Component {
     }
     render() {
         const { user } = this.state;
+        const {navigate} = this.props.navigation;
 
         return (
             <View>

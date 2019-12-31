@@ -9,12 +9,16 @@ import Test from './Test';
 import DashBoard from './DashBoard'
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
+import SignOut from './SignOut'
 
 
 const MainNavigator = createStackNavigator({
   DashBoard: { screen: DashBoard },
   SignIn: { screen: SignIn },
-  SignuUp : { screen : SignuUp }
+  SignuUp : { screen : SignuUp },
+  SignOut :{ screen : SignOut },
+  ChatBoard : {screen  : ChatBoard},
+  PersonalChatScreen : { screen : PersonalChatScreen}
 });
 
 const App = createAppContainer(MainNavigator);

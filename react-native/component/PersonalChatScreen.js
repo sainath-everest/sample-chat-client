@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { View, Text, TextInput, Button, FlatList, StyleSheet, KeyboardAvoidingView } from 'react-native'
 import * as MessageService from '../service/message-service'
+import SignOut from './SignOut';
 
 export default class PersonalChatScreen extends Component {
 
@@ -9,7 +10,8 @@ export default class PersonalChatScreen extends Component {
         this.state = {
             messages: [],
             currentMessage: "",
-            socket: null
+            socket: null,
+            needToSingOut : false
 
         }
     }
@@ -20,7 +22,7 @@ export default class PersonalChatScreen extends Component {
             console.log("message from server ", data)
             let msgs = this.state.messages
             msgs.push(data)
-            MessageService.addMessagetoStore(data)
+            MessageService.addMessagetoStore(data.senderId,data)
             this.setState({ messages: msgs }, () => { console.log(this.state.messages) })
 
         }
@@ -40,20 +42,27 @@ export default class PersonalChatScreen extends Component {
             senderId: this.props.loggedInUser,
             receiverId: this.props.targetUser,
             data: this.state.currentMessage,
-            date: new Date(),
+            date: new Date().toLocaleString(),
             messageType: "outgoing"
         }
 
         this.props.socket.send(JSON.stringify(msg))
         this.state.messages.push(msg)
-        MessageService.addMessagetoStore(msg)
+        MessageService.addMessagetoStore(msg.senderId,msg)
         this.messageInput.clear()
         this.setState({})
+
+    }
+    doSignOut(){
+        this.setState({needToSingOut : true})
 
     }
 
     render() {
         return (
+            <View>
+                {this.state.needToSingOut ? <SignOut socket = {this.props.socket} /> :
+           
             <KeyboardAvoidingView enabled>
                 <View>
                     <FlatList
@@ -81,8 +90,19 @@ export default class PersonalChatScreen extends Component {
                         title="Send"
                         onPress={(e) => this.onMessageSubmit(e)}
                     />
+                     <Button
+                        title="SigOut"
+                        color="#A2D9CE"
+                        onPress={() => this.doSignOut()}
+                    />
+                    
                 </View>
+               
+               
+                
             </KeyboardAvoidingView>
+    }
+            </View>
 
         )
 
@@ -106,12 +126,12 @@ const styles = StyleSheet.create({
     },
     outgoing: {
         backgroundColor: '#FFC0CB',
-        alignSelf: 'flex-start'
+        alignSelf: 'flex-end'
        
     },
     incoming: {
         backgroundColor: '#A2D9CE',
-        alignSelf: 'flex-end'
+        alignSelf: 'flex-start'
        
        
     },
