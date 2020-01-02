@@ -23,11 +23,12 @@ export default class PersonalChatScreen extends Component {
             let msgs = this.state.messages
             msgs.push(data)
             MessageService.addMessagetoStore(data.senderId,data)
-            this.setState({ messages: msgs }, () => { console.log(this.state.messages) })
+            this.setState({ messages: msgs })
 
         }
         if (this.state.messages.length == 0) {
-            this.state.messages = MessageService.getUserMessagesById(this.props.targetUser)
+            console.log("test  ")
+            this.state.messages = JSON.parse(JSON.stringify(MessageService.getUserMessagesById(this.props.targetUser)))
             this.setState({})
         }
 
