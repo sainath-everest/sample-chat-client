@@ -76,7 +76,7 @@ export default class SignuUp extends Component {
 
                         <Form
                             ref="form"
-                            onSubmit={this.handleSubmit} y
+                            onSubmit={this.handleSubmit}
                         >
                             <TextValidator
                                 name="UserID"

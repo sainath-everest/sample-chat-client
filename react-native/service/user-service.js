@@ -5,14 +5,17 @@ import * as MessageService from '../service/message-service'
 
 let connection = null;
 export const registration = async (user) => {
-  return await axios.post('http://192.168.0.13:8000/registration', user);
+  return await axios.post('http://192.168.0.65:8000/registration', user);
 }
 export const signin = async (user) => {
-  return await axios.post('http://192.168.0.13:8000/signin', user);
+  return await axios.post('http://192.168.0.65:8000/signin', user);
+}
+export const getAllUsers = async (userId) => {
+  return await axios.get('http://192.168.0.65:8000/getAllUsers?id='+userId)
 }
 export const geScocketConnection = async (userId) => {
   if(connection == null){
-    connection = new WebSocket("ws://192.168.0.13:8000/ws?id="+userId) ;
+    connection = new WebSocket("ws://192.168.0.65:8000/ws?id="+userId) ;
     connection.onopen = (event) => {
       connection.onmessage = (event) => {
         const data = JSON.parse(event.data)
@@ -24,8 +27,7 @@ export const geScocketConnection = async (userId) => {
       return connection
  
     }
-    
-  
+
   }
   
   return connection

@@ -16,7 +16,7 @@ export default class PersonalChatScreen extends Component {
         }
     }
     componentDidMount() {
-        console.log(this.props.socket)
+        console.log("socket state ",this.props.socket.readyState)
         this.props.socket.onmessage = (event) => {
             const data = JSON.parse(event.data)
             console.log("message from server ", data)

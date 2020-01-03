@@ -1,16 +1,26 @@
 import React, { Component } from 'react'
 import {Text, View , StyleSheet, FlatList } from 'react-native'
 import PersonalChatScreen from './PersonalChatScreen'
+import * as UserService from '../service/user-service'
 export default class ChatBoard extends Component {
   constructor(props) {
     super(props);
     this.state = {
-
-      friendList: ["suresh", "srikanth", "santhosh"],
+      friendList: [],
       targetUser: "",
       socket: null
     }
   }
+  componentDidMount() {
+   this.getAllUsers()
+    
+  }
+  getAllUsers =  async () => {
+    users = await UserService.getAllUsers(this.props.loggedInUser)
+    this.setState({friendList:users.data})
+   
+  }
+
   onTextPress = (event, data) => {
     console.log(data);
     this.setState({ targetUser: data })
@@ -31,7 +41,7 @@ export default class ChatBoard extends Component {
               <View style={styles.separator}>
                 <Text
                   style={styles.item}
-                  onPress={(e) => this.onTextPress(e, item)}>{item}
+                  onPress={(e) => this.onTextPress(e, item.UserID)}>{item.FirstName}
                 </Text>
               </View>}
           />
