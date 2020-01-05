@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { View, Text, TextInput, Button, FlatList, StyleSheet, KeyboardAvoidingView } from 'react-native'
 import * as MessageService from '../service/message-service'
+import * as UserService from '../service/user-service'
 import SignOut from './SignOut';
 
 export default class PersonalChatScreen extends Component {
@@ -17,7 +18,7 @@ export default class PersonalChatScreen extends Component {
     }
     componentDidMount() {
         console.log("socket state ",this.props.socket.readyState)
-        this.props.socket.onmessage = (event) => {
+            UserService.connection.onmessage = (event) => {
             const data = JSON.parse(event.data)
             console.log("message from server ", data)
             let msgs = this.state.messages
@@ -47,9 +48,9 @@ export default class PersonalChatScreen extends Component {
             messageType: "outgoing"
         }
 
-        this.props.socket.send(JSON.stringify(msg))
+        UserService.connection.send(JSON.stringify(msg))
         this.state.messages.push(msg)
-        MessageService.addMessagetoStore(msg.senderId,msg)
+        MessageService.addMessagetoStore(msg.receiverId,msg)
         this.messageInput.clear()
         this.setState({})
 

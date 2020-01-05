@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import {Text, View , StyleSheet, FlatList } from 'react-native'
 import PersonalChatScreen from './PersonalChatScreen'
 import * as UserService from '../service/user-service'
+
 export default class ChatBoard extends Component {
   constructor(props) {
     super(props);

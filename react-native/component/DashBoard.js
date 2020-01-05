@@ -1,7 +1,13 @@
 import React, { Component } from 'react';
 import { View, Button, StyleSheet, Text } from 'react-native'
+import {getNetWorkStatus} from '../service/user-service'
+
 
 export default class DashBoard extends Component {
+    componentDidMount(){
+        getNetWorkStatus()
+    }
+   
     render() {
         const {navigate} = this.props.navigation;
         return (
