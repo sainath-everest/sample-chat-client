@@ -5,7 +5,7 @@ import {getNetWorkStatus} from '../service/user-service'
 
 export default class DashBoard extends Component {
     componentDidMount(){
-        getNetWorkStatus()
+       // getNetWorkStatus()
     }
    
     render() {

@@ -41,11 +41,17 @@ export default class SignIn extends Component {
     }
     intiateWebsocketConnection = async () => {
         if (this.state.socket == null) {
-            const connection = await UserService.geScocketConnection(this.state.user.UserID)
-            this.setState({ socket: connection }, () => { console.log(this.state) })
+            const connection = await UserService.geScocketConnection(this.state.user.UserID, this.updateConnection)
+            this.updateConnection(connection);
         }
-
     }
+
+    updateConnection = (connection) => {
+        console.log("new conn", connection);
+        this.setState({ socket: connection })
+        
+    }
+
     render() {
         const { user } = this.state;
         const {navigate} = this.props.navigation;

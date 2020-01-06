@@ -11,27 +11,21 @@ export default class PersonalChatScreen extends Component {
         this.state = {
             messages: [],
             currentMessage: "",
-            socket: null,
             needToSingOut : false
-
         }
     }
-    componentDidMount() {
-        console.log("socket state ",this.props.socket.readyState)
-            UserService.connection.onmessage = (event) => {
-            const data = JSON.parse(event.data)
-            console.log("message from server ", data)
-            let msgs = this.state.messages
-            msgs.push(data)
-            MessageService.addMessagetoStore(data.senderId,data)
-            this.setState({ messages: msgs })
 
-        }
+    componentDidMount() {
+        this.handleOnMessageEvent(this.props.socket); 
         if (this.state.messages.length == 0) {
-            console.log("test  ")
             this.state.messages = JSON.parse(JSON.stringify(MessageService.getUserMessagesById(this.props.targetUser)))
             this.setState({})
         }
+    }
+
+    componentDidUpdate(){
+        console.log("latest socket ",this.props.socket)
+        this.handleOnMessageEvent(this.props.socket);
 
     }
 
@@ -48,13 +42,37 @@ export default class PersonalChatScreen extends Component {
             messageType: "outgoing"
         }
 
-        UserService.connection.send(JSON.stringify(msg))
+        this.props.socket.send(JSON.stringify(msg))
         this.state.messages.push(msg)
         MessageService.addMessagetoStore(msg.receiverId,msg)
         this.messageInput.clear()
         this.setState({})
 
     }
+
+    registerOnMessageEvent(connection) {
+        connection.onmessage = (event) => {
+            const data = JSON.parse(event.data)
+            console.log("message from server ", data)
+            let msgs = this.state.messages
+            msgs.push(data)
+            MessageService.addMessagetoStore(data.senderId,data)
+            this.setState({ messages: msgs })
+        }
+    }
+
+    handleOnMessageEvent = (connection) => {
+        console.log("in handleOnMessageEvent ",connection.readyState)
+        if(connection.readyState === 1) {
+            this.registerOnMessageEvent(connection);
+        } else {
+            connection.onopen = (event) => {
+                this.registerOnMessageEvent(connection);
+            }
+        }
+    
+    }
+
     doSignOut(){
         this.setState({needToSingOut : true})
 
