@@ -41,6 +41,4 @@ export const addMessagetoStore = (userId,message) => {
     userMessages = messageMap[userId]
     userMessages.push(message)
    
-    
-    
 }
