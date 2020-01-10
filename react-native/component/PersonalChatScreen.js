@@ -17,10 +17,16 @@ export default class PersonalChatScreen extends Component {
 
     componentDidMount() {
         this.handleOnMessageEvent(this.props.socket); 
+        this.loadMessageHistory();
+      
+    }
+     loadMessageHistory = async() => {
         if (this.state.messages.length == 0) {
-            this.state.messages = JSON.parse(JSON.stringify(MessageService.getUserMessagesById(this.props.targetUser)))
-            this.setState({})
-        }
+            this.state.messages =  await MessageService.getUserMessagesById(this.props.targetUser)
+             console.log("test",this.state.messages )
+             this.setState({})
+         }
+
     }
 
     componentDidUpdate(){
@@ -77,7 +83,7 @@ export default class PersonalChatScreen extends Component {
         this.setState({needToSingOut : true})
 
     }
-
+    
     render() {
         return (
             <View>
