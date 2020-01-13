@@ -16,13 +16,13 @@ export default class PersonalChatScreen extends Component {
     }
 
     componentDidMount() {
-        this.handleOnMessageEvent(this.props.socket); 
+        this.handleOnMessageEvent(this.props.navigation.state.params.socket,); 
         this.loadMessageHistory();
       
     }
      loadMessageHistory = async() => {
         if (this.state.messages.length == 0) {
-            this.state.messages =  await MessageService.getUserMessagesById(this.props.targetUser)
+            this.state.messages =  await MessageService.getUserMessagesById(this.props.navigation.state.params.targetUser)
              console.log("test",this.state.messages )
              this.setState({})
          }
@@ -30,8 +30,8 @@ export default class PersonalChatScreen extends Component {
     }
 
     componentDidUpdate(){
-        console.log("latest socket ",this.props.socket)
-        this.handleOnMessageEvent(this.props.socket);
+        console.log("latest socket ",this.props.navigation.state.params.socket)
+        this.handleOnMessageEvent(this.props.navigation.state.params.socket);
 
     }
 
@@ -41,14 +41,14 @@ export default class PersonalChatScreen extends Component {
 
     onMessageSubmit(event) {
         const msg = {
-            senderId: this.props.loggedInUser,
-            receiverId: this.props.targetUser,
+            senderId: this.props.navigation.state.params.loggedInUser,
+            receiverId: this.props.navigation.state.params.targetUser,
             data: this.state.currentMessage,
             date: new Date().toLocaleString(),
             messageType: "outgoing"
         }
 
-        this.props.socket.send(JSON.stringify(msg))
+        this.props.navigation.state.params.socket.send(JSON.stringify(msg))
         this.state.messages.push(msg)
         MessageService.addMessagetoStore(msg.receiverId,msg)
         this.messageInput.clear()
@@ -87,7 +87,7 @@ export default class PersonalChatScreen extends Component {
     render() {
         return (
             <View>
-                {this.state.needToSingOut ? <SignOut socket = {this.props.socket} /> :
+                {this.state.needToSingOut ? <SignOut socket = {this.props.navigation.state.params.socket} /> :
            
             <KeyboardAvoidingView enabled>
                 <View>

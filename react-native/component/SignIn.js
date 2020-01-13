@@ -35,6 +35,7 @@ export default class SignIn extends Component {
         this.state.isFormSubmitted = true
         if (this.state.isUserLoginSuccess) {
             this.intiateWebsocketConnection()
+            
         }
         this.setState({})
 
@@ -49,6 +50,7 @@ export default class SignIn extends Component {
     updateConnection = (connection) => {
         console.log("new conn", connection);
         this.setState({ socket: connection })
+        this.props.navigation.navigate('ChatBoard',{socket : this.state.socket,loggedInUser : this.state.user.UserID})
         
     }
 
@@ -58,10 +60,6 @@ export default class SignIn extends Component {
 
         return (
             <View>
-                {this.state.isUserLoginSuccess && this.state.isFormSubmitted ? 
-                    <ChatBoard socket={this.state.socket} loggedInUser = {this.state.user.UserID}/>
-                 : 
-                <View>
                     {this.state.isFormSubmitted ? <Text style={styles.text}>The signin failed,Please try agian</Text> : <Text></Text>}
                     <Form
                         ref="form"
@@ -94,9 +92,6 @@ export default class SignIn extends Component {
                         />
                     </Form>
                 </View>
-            }
-            </View>
-    
         )
 
     }

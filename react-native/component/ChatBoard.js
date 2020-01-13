@@ -17,23 +17,27 @@ export default class ChatBoard extends Component {
     
   }
   getAllUsers =  async () => {
-    users = await UserService.getAllUsers(this.props.loggedInUser)
+    users = await UserService.getAllUsers(this.props.navigation.state.params.loggedInUser)
     this.setState({friendList:users.data})
    
   }
 
   onTextPress = (event, data) => {
     console.log(data);
-    this.setState({ targetUser: data })
+    this.state.targetUser = data
+    this.props.navigation.navigate('PersonalChatScreen',{
+      socket : this.props.navigation.state.params.socket,
+      loggedInUser : this.props.navigation.state.params.loggedInUser,
+      targetUser : this.state.targetUser
+
+    })      
   }
 
   render() {
+   // const {navigate} = this.props.navigation;
     return (
       <View >
-        {this.state.targetUser != "" ? <PersonalChatScreen
-          targetUser={this.state.targetUser}
-          loggedInUser = {this.props.loggedInUser}
-          socket={this.props.socket} /> :
+      
 
           <FlatList
             keyExtractor={(item, index) => item}
@@ -46,7 +50,7 @@ export default class ChatBoard extends Component {
                 </Text>
               </View>}
           />
-        }
+        
       </View>
     );
   }
