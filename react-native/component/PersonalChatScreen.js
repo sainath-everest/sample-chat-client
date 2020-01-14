@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { View, Text, TextInput, Button, FlatList, StyleSheet, KeyboardAvoidingView } from 'react-native'
 import * as MessageService from '../service/message-service'
 import * as UserService from '../service/user-service'
-import SignOut from './SignOut';
 
 export default class PersonalChatScreen extends Component {
 
@@ -16,7 +15,7 @@ export default class PersonalChatScreen extends Component {
     }
 
     componentDidMount() {
-        this.handleOnMessageEvent(this.props.navigation.state.params.socket,); 
+        this.handleOnMessageEvent(this.props.navigation.state.params.socket); 
         this.loadMessageHistory();
       
     }
@@ -79,15 +78,10 @@ export default class PersonalChatScreen extends Component {
     
     }
 
-    doSignOut(){
-        this.setState({needToSingOut : true})
-
-    }
     
     render() {
         return (
             <View>
-                {this.state.needToSingOut ? <SignOut socket = {this.props.navigation.state.params.socket} /> :
            
             <KeyboardAvoidingView enabled>
                 <View>
@@ -116,18 +110,14 @@ export default class PersonalChatScreen extends Component {
                         title="Send"
                         onPress={(e) => this.onMessageSubmit(e)}
                     />
-                     <Button
-                        title="SigOut"
-                        color="#A2D9CE"
-                        onPress={() => this.doSignOut()}
-                    />
+
                     
                 </View>
                
                
                 
             </KeyboardAvoidingView>
-    }
+    
             </View>
 
         )

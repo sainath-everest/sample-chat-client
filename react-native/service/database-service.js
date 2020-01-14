@@ -28,10 +28,11 @@ const UserLoginInfoschema = {
 
 }
 
+
 export const insertNewUserRecord = async (userId, message) => {
   console.log("in insertNewUserRecord")
   Realm.open({
-    schema: [UserSchema, Messageschema]
+    schema: [UserSchema, Messageschema,UserLoginInfoschema]
   }).then(realm => {
     realm.write(() => {
       let user = realm.create('User', { userId: userId, messages: [] });
@@ -46,7 +47,7 @@ export const isUserExist = async (userId) => {
   let isUserExist = false;
 
   let realm = await Realm.open({
-    schema: [UserSchema, Messageschema]
+    schema: [UserSchema, Messageschema,UserLoginInfoschema]
   })
 
   let users = realm.objects('User')
@@ -61,7 +62,7 @@ export const isUserExist = async (userId) => {
 export const addNewMessageToUser = async (userId, message) => {
   console.log("in addNewMessageToUser")
   Realm.open({
-    schema: [UserSchema, Messageschema]
+    schema: [UserSchema, Messageschema,UserLoginInfoschema]
   }).then(realm => {
     realm.write(() => {
       let msg = realm.create('Message', message);
@@ -75,7 +76,7 @@ export const addNewMessageToUser = async (userId, message) => {
 export const getUserMessagesById = async (userId) => {
 
   let realm = await Realm.open({
-    schema: [UserSchema, Messageschema]
+    schema: [UserSchema, Messageschema,UserLoginInfoschema]
   })
   let users = realm.objects('User').filtered(' userId == $0', userId)
   let userMessages = []
@@ -98,12 +99,27 @@ export const addUserLoginInfo = async (userId, token) => {
   }).then(realm => {
     realm.write(() => {
       let userLoginInfo = realm.create('UserLoginInfo', { loggedinUserId: userId, token: token });
-      console.log("userLoginInfo ",userLoginInfo)
+      console.log("userLoginInfo ", userLoginInfo)
 
     })
 
   }
 
   )
+
+}
+
+export const getUserLoginfo = async (uerId) => {
+  console.log("in getUserLoginfo")
+
+  let realm = await Realm.open({
+    schema: [UserSchema, Messageschema,UserLoginInfoschema]
+  })
+  let userLoginInfo = realm.objects('UserLoginInfo')
+  let userInfo = null
+  if(userLoginInfo.length>0){
+    userInfo = {"userId":`${userLoginInfo[0].loggedinUserId}`,"token":`${userLoginInfo[0].token}`}
+  }
+  return userInfo
 
 }
