@@ -8,20 +8,22 @@ import NetInfo from "@react-native-community/netinfo";
 export let connection = null;
 let loggedInUserId = null;
 let prevState = null;
+const serverUrl = 'http://10.37.20.164:8000'
+const websocketUrl = 'ws://10.37.20.164:8000'
 export const registration = async (user) => {
-  return await axios.post('http://192.168.0.111:8000/registration', user);
+  return await axios.post(serverUrl+'/registration', user);
 }
 export const signin = async (user) => {
-  return await axios.post('http://192.168.0.111:8000/signin', user);
+  return await axios.post(serverUrl+'/signin', user);
 }
 export const getAllUsers = async (userId) => {
-  return await axios.get('http://192.168.0.111:8000/getAllUsers?id=' + userId)
+  return await axios.get(serverUrl+'/getAllUsers?id=' + userId)
 }
-export const geScocketConnection = async (userId, onChangeHandler) => {
+export const geScocketConnection = async (userId, token ,onChangeHandler) => {
   loggedInUserId = userId
   console.log("in geScocketConnection ",loggedInUserId,connection);
   
-  connection = createSocketConnection(userId);
+  connection = createSocketConnection(userId,token);
 
   onNetworkStatusChange( (status) => {
     if(status && (connection == null || connection.readyState == 3)) {
@@ -31,11 +33,12 @@ export const geScocketConnection = async (userId, onChangeHandler) => {
   });
 
   return connection
+  
 }
 
-export const createSocketConnection =  (userId) => {
+export const createSocketConnection =  (userId,token) => {
   if ((connection == null || connection.readyState == 3) &&  loggedInUserId != null) {
-    connection = new WebSocket("ws://192.168.0.111:8000/ws?id=" + userId);
+    connection = new WebSocket(websocketUrl+"/ws?id=" + userId+"&token="+token);
     connection.onopen = (event) => {
       connection.onmessage = (event) => {
         const data = JSON.parse(event.data)

@@ -18,6 +18,15 @@ const Messageschema = {
 
   }
 }
+const UserLoginInfoschema = {
+  name: 'UserLoginInfo',
+  properties: {
+    loggedinUserId: { type: 'string' },
+    token: { type: 'string' }
+
+  }
+
+}
 
 export const insertNewUserRecord = async (userId, message) => {
   console.log("in insertNewUserRecord")
@@ -68,17 +77,33 @@ export const getUserMessagesById = async (userId) => {
   let realm = await Realm.open({
     schema: [UserSchema, Messageschema]
   })
-  let users = realm.objects('User').filtered(' userId == $0',userId)
+  let users = realm.objects('User').filtered(' userId == $0', userId)
   let userMessages = []
   console.log(users.length)
-  if (users.length > 0){
+  if (users.length > 0) {
     for (let msg of users[0].messages) {
       userMessages.push(JSON.parse(JSON.stringify(msg)))
-  
+
     }
 
   }
-  console.log("userMessages ",userMessages)
+  console.log("userMessages ", userMessages)
   return userMessages
+
+}
+export const addUserLoginInfo = async (userId, token) => {
+  console.log("in addUserLoginInfo")
+  Realm.open({
+    schema: [UserLoginInfoschema]
+  }).then(realm => {
+    realm.write(() => {
+      let userLoginInfo = realm.create('UserLoginInfo', { loggedinUserId: userId, token: token });
+      console.log("userLoginInfo ",userLoginInfo)
+
+    })
+
+  }
+
+  )
 
 }

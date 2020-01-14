@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { Button, View , StyleSheet ,Text } from 'react-native';
 import * as UserService from '../service/user-service'
 import ChatBoard from './ChatBoard'
+import * as DatabaseService  from '../service/database-service'
 export default class SignIn extends Component {
     constructor(props) {
         super(props);
@@ -30,19 +31,22 @@ export default class SignIn extends Component {
     handleSubmit = async () => {
         console.log("before user login " + this.state.user)
         const res = await UserService.signin(this.state.user)
-        let status = res.data === 'success' ? true : false
+        console.log("test ",res.data)
+        let status = res.data.isLoginSuccess === 'success' ? true : false
         this.state.isUserLoginSuccess = status;
         this.state.isFormSubmitted = true
+        const token = res.data.token 
         if (this.state.isUserLoginSuccess) {
-            this.intiateWebsocketConnection()
+            this.intiateWebsocketConnection(token)
+            await DatabaseService.addUserLoginInfo(this.state.user.UserID,token)
             
         }
         this.setState({})
 
     }
-    intiateWebsocketConnection = async () => {
+    intiateWebsocketConnection = async (token) => {
         if (this.state.socket == null) {
-            const connection = await UserService.geScocketConnection(this.state.user.UserID, this.updateConnection)
+            const connection = await UserService.geScocketConnection(this.state.user.UserID,token, this.updateConnection)
             this.updateConnection(connection);
         }
     }
