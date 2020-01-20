@@ -42,8 +42,9 @@ export default class ChatBoard extends Component {
     console.log("test ",this.state.socket)
     this.props.navigation.navigate('PersonalChatScreen', {
       socket: this.state.userLoginInfo ? this.state.socket : this.props.navigation.state.params.socket,
-      loggedInUser: this.state.userLoginInfo ? this.state.userLoginInfo.loggedinUserId : this.props.navigation.state.params.loggedInUser,
+      loggedInUser: this.state.userLoginInfo ? this.state.userLoginInfo.userId : this.props.navigation.state.params.loggedInUser,
       targetUser: this.state.targetUser
+
 
     })
   }
