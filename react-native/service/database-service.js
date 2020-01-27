@@ -95,7 +95,7 @@ export const getUserMessagesById = async (userId) => {
 export const addUserLoginInfo = async (userId, token) => {
   console.log("in addUserLoginInfo")
   Realm.open({
-    schema: [UserLoginInfoschema]
+    schema: [UserLoginInfoschema,UserSchema, Messageschema]
   }).then(realm => {
     realm.write(() => {
       let userLoginInfo = realm.create('UserLoginInfo', { loggedinUserId: userId, token: token });
